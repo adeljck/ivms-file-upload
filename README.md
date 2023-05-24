@@ -8,7 +8,7 @@
 
 ```shell
   ./main -h
-  -c    check target vuln.(default) (default true)
+  -c    check target vuln.(default)
   -e    direct fuck targets.
   -f string
         targets you want fuck.
