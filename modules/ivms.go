@@ -25,6 +25,9 @@ func (I *Ivms) init() {
 	flag.BoolVar(&I.check, "c", true, "check target vuln.(default)")
 	flag.Parse()
 	I.vuln = false
+	if I.target == "" && I.targetFile == "" {
+		log.Fatalln("[*] just give single target with u parma or multi targets with parma f")
+	}
 	if I.target != "" && I.targetFile != "" {
 		log.Fatalln("[*] just give single target with u parma or multi targets with parma f")
 	}
