@@ -10,12 +10,14 @@
 
 ```shell
   ./main -h
-  -c    check target vuln.(default)
+  -c    check target vuln.(default) (default true)
   -e    direct fuck targets.
   -f string
         targets you want fuck.
   -s string
         shell file you want upload.
+  -t int
+        request timeout default is 5 second. (default 5)
   -u string
         target you want fuck.
 ```
