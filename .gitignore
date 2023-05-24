@@ -1,3 +1,5 @@
 .idea
 .git
 build.sh
+*.zip
+ivms_*
