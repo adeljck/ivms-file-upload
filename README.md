@@ -6,6 +6,8 @@
 
 ## 使用方法
 
+编译下载链接:[ivms_fucker](https://github.com/adeljck/ivms-file-upload/releases/tag/release)
+
 ```shell
   ./main -h
   -c    check target vuln.(default)
