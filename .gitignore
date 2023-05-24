@@ -4,3 +4,4 @@ build.sh
 *.zip
 ivms_*
 *.txt
+*.jsp

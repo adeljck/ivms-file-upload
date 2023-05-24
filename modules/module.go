@@ -9,4 +9,5 @@ type Ivms struct {
 	vuln       bool
 	shellPath  string
 	shellFile  string
+	timeout    int
 }
